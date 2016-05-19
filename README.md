@@ -14,7 +14,7 @@
 * python utils
 	* countLine
 	* getPicture
-	* one2multiLine
+	* one2multiLine  
 ***
 ##generate file
 主要是生成(字符型)文件的工具
