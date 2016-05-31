@@ -11,7 +11,7 @@ default_dir = 'new/'
 
 file_name = "美女"
 
-index = 13
+index = 0
 
 def get_dirs():
 	result = []

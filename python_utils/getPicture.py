@@ -25,7 +25,7 @@ sub_reg = 'http://img\d.\.'
 
 sub_replace = 'http://www.'
 
-pages = [5338,5359,5351,5284,5270,5251,5246,5241]
+pages = [5374,5364,5369]
 
 special_dir = True
 

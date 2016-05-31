@@ -1,23 +1,25 @@
 # 我的工具
 我的工具主要包含自己积累的自动化工具，包括*Python爬虫*、*图片处理*等等。具体列表:
 
-* generate file
+* generate_file
 	* generateFile
 	* generateXML
 	* generateStringXML
-* generate drawables
+* generate_drawables
 	* generateAndroidDrawable (Java project)
 	* generateDrawables (Python)
-* generate ppt
+	* batchGenerateDrawables （Python）
+* generate_ppt
 	* autoGenerateAllPpt
 	* generatePpt
-* python utils
+* python_utils
 	* countLine
 	* getPicture
 	* one2multiLine  
+	* argv_engine
 	
 ***
-##generate file
+##generate_file
 主要是生成(字符型)文件的工具
 ###generateFile
 **作用：**读取旧文件中的所有行，使用设置的字符(串)分割成两段，并在第一段的左边添加`left`，两段之间添加`middle`，第二段右边添加`right`，并保存到新文件中。
@@ -80,7 +82,7 @@ item2=Toby
 <string name="item2">Toby</string>
 ```
 ***
-##generate drawables
+##generate_drawables
 主要是生成Android drawable的工具
 ###generateAndroidDrawable (Java project)
 **作用：**输入图片或包含图片的文件夹，将输入图片(或文件夹中每张图片)以Android xxhdpi(3倍)为基准进行缩放，并生成Android各种dpi下的图片。
@@ -99,12 +101,74 @@ item2=Toby
 * drawable-xxhdpi
 * drawable-xxxhdpi
 
-并会在每一个文件夹(xxxhdpi大小和xxhdpi大小相同)下生成响应大小的`test.png`图片。
+并会在每一个文件夹(xxxhdpi大小和xxhdpi大小相同)下生成相应大小的`test.png`图片。
 ###generateDrawables(Python)
 
-*尚未完成*
+**作用：**输入图片，生成Android各种dpi下的图片。
+
+**使用方法：**`python generateDrawable.py -p image_path -op out_path [-extra argv]` 
+
+**参数说明：**
+
+```
+-p	:	图片路径，任意格式图片，非png图片将被转为png图片
+-op	:	输出图片位置，若文件名不已drawable结尾，则会在此路径后新建drawable文件夹
+extra:
+		-on	:	输出图片名称，如果不设置，将使用原图名称
+		-ms	:	输出图片最大大小，即在xxxdpi下的大小，若不设置，将使用原图大小
+			格式:100-100
+		-as	:	输出图片最大大小的缩放大小，若设置小于xxxdpi，则更大的缩放大小下图片不进行缩放
+			可使用:	xxx | xx | x | h | m | l
+			若不设置，默认使用'xxx'
+		-is	:	能输出的最小缩放大小，若设置大于ldpi，则不会输出更小的缩放图片
+			可使用:	xxx | xx | x | h | m | l
+			若不设置，默认使用'l'
+```
+
+**例子：**
+
+在`/Users/Imdreaming/Pictures`文件夹下有`test.png`文件，使用`python generateDrawable.py -p /Users/Imdreaming/Pictures/test.png -op /Users/Imdreaming/Pictures/res -as xx -is m`将会在`/Users/Imdreaming/Pictures`目录下创建`res`目录，并生成多个文件夹，结构如下：
+
+* drawable-hdpi
+* drawable-mdpi
+* drawable-xhdpi
+* drawable-xxhdpi	(原图大小)
+* drawable-xxxhdpi	(原图大小)
+
+并会在每一个文件夹下生成相应大小的`test.png`图片。
+###batchGenerateDrawables （Python）
+**作用：**批量生成Android各种dpi下的图片。
+
+**使用方法：**`python batchGenerateDrawables.py <pic dir | pic file> <out dir> [-extra argv]`
+
+**参数说明：**
+
+```
+<pic dir | pic file>	:	包含图片的目录或图片文件，任意格式图片，非png图片将被转为png图片
+<out dir>				:	输出文件夹
+extra:
+	-ic	:	如果设置为true，说明需要生成的是launcher图片，输出图片的最大大小将被设置为 192-192
+	-ms	:	输出图片最大大小，即在xxxdpi下的大小，若不设置，将使用原图大小
+			格式:100-100
+	-as	:	输出图片最大大小的缩放大小，若设置小于xxxdpi，则更大的缩放大小下图片不进行缩放
+			可使用:	xxx | xx | x | h | m | l
+			若不设置，默认使用'xxx'
+	-is	:	能输出的最小缩放大小，若设置大于ldpi，则不会输出更小的缩放图片
+			可使用:	xxx | xx | x | h | m | l
+			若不设置，默认使用'l'
+```
+
+**例子：**在`/Users/Imdreaming/Pictures`文件夹下有`test1.png,test2.jpg`文件，使用`python batchGenerateDrawables.py /Users/Imdreaming/Pictures /Users/Imdreaming/Pictures/res -as xx -is m`将会在`/Users/Imdreaming/Pictures`目录下创建`res`目录，并生成多个文件夹，结构如下：
+
+* drawable-hdpi
+* drawable-mdpi
+* drawable-xhdpi
+* drawable-xxhdpi	(原图大小)
+* drawable-xxxhdpi	(原图大小)
+
+并会在每一个文件夹下生成相应大小的`test1.png`和`test2.png`图片。
 ***
-##generate ppt
+##generate_ppt
 生成ppt的工具
 ###generatePpt
 **作用：**读取文件夹中的图片，并将不多于10张图片生成ppt，每张图片构成ppt的一页，并放在正中，高和宽小于等于ppt的高和宽。
@@ -113,7 +177,7 @@ item2=Toby
 ###autoGenerateAllPpt
 **作用：**自动获取某个文件夹下一级文件夹里面的所有图片，并将每个文件夹下的图片(不少于5张，不多于10张)做成一个ppt。
 ***
-##python utils
+##python_utils
 使用Python做的一些小工具
 ### countLine
 **作用：**输入文件夹和匹配文件名的字符串，递归的计算文件夹下所有匹配文件的行数，并输出到log文件中。
@@ -124,5 +188,7 @@ item2=Toby
 **作用：**获取某些连接下的所有匹配`Target`和`regxs`的图片，并分别保存。
 
 **使用方法：**需要自己修改文件中的一些参数。
+###argv_engine
+内部有`process_argv(argv,keys,offset=-1)`函数，函数会根据`keys`来处理`sys.argv`数组并返回一个字典，字典中包含keys和sys.argv中对应的值，若`sys.argv`中没有对应值，`key`将不存在。函数中会判断`sys.argv`的长度是否大于`offset`，若不大于将返回`None`，在查找`key`时，若`key`在`sys.argv`中的位置小于等于`offset`，此`key`被忽略。
 ***
 联系方式：s18810577589@sina.com
