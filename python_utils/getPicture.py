@@ -5,11 +5,11 @@ import time
 import urllib
 import urllib2
 
-Image_Path = "/Users/XK/Pictures/beauty/"
+Image_Path = "/Users/MOMO/Pictures/beauty/"
 
 Default_File = "new/"
 
-Url = "http://www.meizitu.com/a/"
+Url = "http://qq.yh31.com/zjbq/0551964"
 
 url_middle = "_"
 
@@ -17,15 +17,15 @@ url_suffix = ".html"
 
 Sleep = 2
 
-Target = r'<img.+src="(.+?jpg)"[\s|]/>'
+Target = r'<img src="(.+?[jpg|gif])".+/>'
 
-regxs = [r'(http.*jpg)']
+regxs = [r'(/tp.*[jpg|gif])']
 
 sub_reg = 'http://img\d.\.'
 
 sub_replace = 'http://www.'
 
-pages = [5374,5364,5369]
+pages = xrange(1,40)
 
 special_dir = True
 
@@ -36,8 +36,13 @@ def search_reg(url,reg):
 		return g
 	return None
 
+def add_line(line):
+	if line.find('/><'):
+		line = re.sub('/><','/>\n<',line)
+	return line
+
 def sub_url(old):
-	return old#re.sub(sub_reg,sub_replace,old)
+	return 'http://qq.yh31.com/'+old#re.sub(sub_reg,sub_replace,old)
 
 def get_file_path(page):
 	if special_dir:
@@ -89,7 +94,8 @@ def get_href(page):
 	try:
 		s = urllib2.urlopen(page)
 		hrefs = re.compile(Target)
-		s = s.read()
+		s = add_line(s.read())
+		# print s
 		links = hrefs.findall(s)
 		return links
 	except Exception,e:
@@ -112,7 +118,7 @@ FLAGS={0:generate_url_0,1:generate_url_1}
 
 def main():
 	for x in pages:
-		u = generate_url(x)
+		u = generate_url(x,flag=1)
 		href = get_href(u)
 		if href is None:
 			continue
